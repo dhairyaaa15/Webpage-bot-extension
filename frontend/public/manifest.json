@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Vite React Tailwind Chrome Extension",
+  "version": "1.0.0",
+  "description": "A Chrome extension built with React and TailwindCSS.",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "vite.svg",
+      "32": "vite.svg",
+      "48": "vite.svg",
+      "128": "vite.svg"
+    }
+  },
+  "icons": {
+    "16": "vite.svg",
+    "32": "vite.svg",
+    "48": "vite.svg",
+    "128": "vite.svg"
+  },
+  "permissions": []
+}
