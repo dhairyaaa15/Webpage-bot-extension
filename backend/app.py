@@ -10,7 +10,7 @@ system_prompts = {}  # Store by session_id
 @app.post("/analyze")
 def analyze():
     url = request.json["url"]
-    session_id = "test123"  # You can generate or receive this from frontend if needed
+    session_id = "test123"
     prompt_preview = get_webpage_analysis(url)
     # Store the analyzed summary as the system prompt for this session
     system_prompts[session_id] = prompt_preview
