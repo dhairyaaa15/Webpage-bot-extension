@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from analyzer import get_webpage_analysis
 from chatbot import get_chatbot_response
 
 app = Flask(__name__)
+CORS(app)  
 system_prompts = {}  # Store by session_id
 
 @app.post("/analyze")
