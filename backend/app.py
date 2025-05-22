@@ -8,26 +8,29 @@ system_prompts = {}  # Store by session_id
 @app.post("/analyze")
 def analyze():
     url = request.json["url"]
+    session_id = "test123"  # You can generate or receive this from frontend if needed
     prompt_preview = get_webpage_analysis(url)
+    # Store the analyzed summary as the system prompt for this session
+    system_prompts[session_id] = prompt_preview
     return {
         "message": "Webpage analyzed",
         "prompt_preview": prompt_preview,
-        "session_id": "test123"
+        "session_id": session_id
     }
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.json
-    session_id = data.get("session_id", "default")
+    data = request.get_json()
     question = data.get("question")
-
+    session_id = data.get("session_id")
     if not question:
         return jsonify({"error": "Missing question"}), 400
     if session_id not in system_prompts:
         return jsonify({"error": "No prompt found. Analyze a webpage first."}), 400
 
     answer = get_chatbot_response(system_prompts[session_id], question)
-    return jsonify({"answer": answer})
+    # Ensure answer is serializable
+    return jsonify({"answer": str(answer)})
 
 if __name__ == "__main__":
     app.run(debug=True)
