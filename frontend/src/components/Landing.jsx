@@ -22,13 +22,25 @@ function Landing() {
   const [focused, setFocused] = useState(false)
   const navigate = useNavigate()
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!url) return
     setLoading(true)
-    setTimeout(() => {
+    try {
+      const res = await fetch('http://localhost:5000/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      })
+      const data = await res.json()
+      // Save session_id and prompt_preview for use in chat
+      localStorage.setItem('session_id', data.session_id)
+      localStorage.setItem('prompt_preview', data.prompt_preview)
       setLoading(false)
       navigate('/chat')
-    }, 2500)
+    } catch (err) {
+      setLoading(false)
+      alert('Failed to analyze webpage')
+    }
   }
 
   const handleKeyPress = (e) => {

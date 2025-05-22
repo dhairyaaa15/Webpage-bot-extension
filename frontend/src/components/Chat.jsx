@@ -15,12 +15,23 @@ What would you like to know?`
   const [focused, setFocused] = useState(false)
   const navigate = useNavigate()
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault()
     if (!input.trim()) return
     setMessages([...messages, { from: 'user', text: input }])
     setInput('')
-    // Here you would add AI response logic
+    const session_id = localStorage.getItem('session_id')
+    try {
+      const res = await fetch('http://localhost:5000/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: input, session_id })
+      })
+      const data = await res.json()
+      setMessages(msgs => [...msgs, { from: 'ai', text: data.answer }])
+    } catch (err) {
+      setMessages(msgs => [...msgs, { from: 'ai', text: 'Error getting answer.' }])
+    }
   }
 
   const handleKeyPress = (e) => {

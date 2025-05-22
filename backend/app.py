@@ -31,7 +31,15 @@ def ask():
         return jsonify({"error": "No prompt found. Analyze a webpage first."}), 400
 
     answer = get_chatbot_response(system_prompts[session_id], question)
-    # Ensure answer is serializable
+    # If answer is a RunResponse, extract the assistant's message content
+    if hasattr(answer, "messages"):
+        # Find the last assistant message
+        assistant_msg = next((m for m in reversed(answer.messages) if getattr(m, "role", None) == "assistant"), None)
+        if assistant_msg:
+            return jsonify({"answer": assistant_msg.content})
+        else:
+            return jsonify({"answer": str(answer)})
+    # If answer is just a string
     return jsonify({"answer": str(answer)})
 
 if __name__ == "__main__":
